@@ -13,8 +13,10 @@
   - [1.4查询点播单](#1_4)  
   - [1.5获取支付参数(微信客户端支付时，需要向服务器获取加密参数)](#1_5)
   - [1.6向点播单报告问题](#1_6)
- 2. [微信用户管理](#2)
-  - [2.1查询用户](#2_1)
+ 2. [微信管理](#2)
+  - [2.1查询微信用户](#2_1)
+  - [2.2获取AccessToken](#2_2)
+  - [2.3微信回调接口](#2_3)
 
 <h2 id="1">1.点播单管理</h2>
 
@@ -253,9 +255,9 @@ content|string|投诉内容|是
 }
 ~~~
 
-<h2 id="2">2.微信用户管理</h2>
+<h2 id="2">2.微信管理</h2>
 
-<h3 id="2_1">2.1查询用户</h3>
+<h3 id="2_1">2.1查询微信用户</h3>
 
 ###request
 
@@ -280,7 +282,8 @@ limit|int|页面大小，默认为20|否
 	    "nickName": "张三",
 	    "iconURL": "https://weixin.com.cn/ajfw90fa9.jpg",
 	    "attentionTime": 1510995105068,
-		"sceneID": 2000
+		"sceneID": 2000,
+		"subscribed": 1
     },{
       ...
     }
@@ -295,3 +298,40 @@ nickName|string|用户昵称
 iconURL|string|用户头像
 attentionTime|string|用户关注本公众号的时间
 sceneID|int|用户最新扫面的二维码场景值
+subscribed|bool|用户当前是否仍在关注
+
+失败 400/500
+~~~
+{
+  "info": "失败描述"
+}
+~~~
+
+<h3 id="2_2">2.2获取AccessToken</h3>
+
+###request
+
+`GET /wxs/wx/accesstoken`
+
+###reponse
+
+成功 200
+
+~~~
+"gzwzM7sD2y0sos7EhoibXawJ1VbUcqesUaUmc8SPJaR6rHvyfIR95GVQxSXtprAD0lFpg7OdhfVhh1"
+~~~
+
+失败 400/500
+~~~
+{
+  "info": "失败描述"
+}
+~~~
+
+<h3 id="2_3">2.3微信回调接口</h3>
+
+###request
+
+`GET&POST /wxs/wx/callback`
+
+用于和微信服务器通信, 接收服务器验证握手, 事件推送等.
