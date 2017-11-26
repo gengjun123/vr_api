@@ -10,13 +10,15 @@
   - [1.1向购物车中添加影片](#1_1)
   - [1.2修改购物车](#1_2)
   - [1.3提交购物车](#1_3)
-  - [1.4查询点播单](#1_4)  
-  - [1.5获取支付参数(微信客户端支付时，需要向服务器获取加密参数)](#1_5)
-  - [1.6向点播单报告问题](#1_6)
+  - [1.4查询购物车](#1_4)
+  - [1.5查询点播单](#1_5)  
+  - [1.6获取支付参数(微信客户端支付时，需要向服务器获取加密参数)](#1_6)
+  - [1.7向点播单报告问题](#1_7)
  2. [微信管理](#2)
   - [2.1查询微信用户](#2_1)
-  - [2.2获取AccessToken](#2_2)
-  - [2.3微信回调接口](#2_3)
+  - [2.2查询用户当前sceneid](#2_2)
+  - [2.3获取AccessToken](#2_3)
+  - [2.4微信回调接口](#2_4)
 
 <h2 id="1">1.点播单管理</h2>
 
@@ -112,7 +114,34 @@ openID|string|微信给用户对本公众号分配的唯一标识，获取方法
 }
 ~~~
 
-<h3 id="1_4">1.4查询点播单</h3>
+<h3 id="1_4">1.4查询购物车</h3>
+
+###request
+
+`GET /wxs/cart?open_id={openID}`
+
+名称| 类型| 描述 |是否必须
+----|-----|-----|-----
+openID|string|微信给用户对本公众号分配的唯一标识|是
+
+###response
+
+成功 200
+~~~
+{
+  "openID": "fweiqb3285nxqojoew",
+  "movieList": ["fqp9j384jf83498uf9e", "9j3gfdja9ngf9ejf83", "1ht984nfvq84q39uf9e"]
+}
+~~~
+
+失败 400/500
+~~~
+{
+  "info": "失败描述"
+}
+~~~
+
+<h3 id="1_5">1.5查询点播单</h3>
 
 ###request
 
@@ -185,9 +214,9 @@ expireTime|int|订单失效时间间隔
 
 `点播单状态(status)枚举：PENDING_PAYMENT(待付款) / ALREADY_PAID(已付款) / OVER_TIME(超出观看时间)`
 
-`点播单进度(progressPhase)枚举:TO_DISTRIBUTE(待派发) / DISTRIBUTED(已派发) / PLAYING(已执行，播放中) / COMPLETED(播放完成) / TO_TERMINATE(待终止，即观众中途离开，并未点击观看完成) / TERMINATED(已终止，即管理员强行将播放终止)`
+`点播单进度(progressPhase)枚举:PENDING_PAYMENT(待付款) / TO_DISTRIBUTE(待派发) / DISTRIBUTED(已派发) / PLAYING(已执行，播放中) / COMPLETED(播放完成) / TO_TERMINATE(待终止，即观众中途离开，并未点击观看完成) / TERMINATED(已终止，即管理员强行将播放终止)`
 
-<h3 id="1_5">1.5获取支付参数(微信客户端支付时，需要向服务器获取加密参数)</h3>
+<h3 id="1_6">1.6获取支付参数(微信客户端支付时，需要向服务器获取加密参数)</h3>
 
 ###request
 
@@ -223,7 +252,7 @@ ticketID|string|提交支付的点播单ID|是
 支付流程见[微信支付开发文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_4)
 
 
-<h3 id="1_6">1.6向点播单报告问题</h3>
+<h3 id="1_7">1.7向点播单报告问题</h3>
 
 ###request
 
@@ -307,7 +336,40 @@ subscribed|bool|用户当前是否仍在关注
 }
 ~~~
 
-<h3 id="2_2">2.2获取AccessToken</h3>
+<h3 id="2_2">2.2查询用户当前sceneid</h3>
+
+###request
+
+`GET /wxs/users/sceneid?open_id={openID}`
+
+名称| 类型| 描述 |是否必须
+----|-----|-----|-----
+openID|string|用户id|是
+
+###reponse
+
+成功 200
+
+~~~
+{
+  "sceneID": 10025,
+  "scanTime": "1511457450"
+}
+~~~
+
+名称| 类型| 描述 
+----|-----|-----
+sceneID|int|场景ID
+scanTime|string|扫描事件微信时间戳(10位)
+
+失败 400/500
+~~~
+{
+  "info": "失败描述"
+}
+~~~
+
+<h3 id="2_3">2.3获取AccessToken</h3>
 
 ###request
 
@@ -328,7 +390,7 @@ subscribed|bool|用户当前是否仍在关注
 }
 ~~~
 
-<h3 id="2_3">2.3微信回调接口</h3>
+<h3 id="2_4">2.4微信回调接口</h3>
 
 ###request
 
