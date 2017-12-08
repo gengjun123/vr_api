@@ -742,7 +742,7 @@ cinemaIDList|list|影院id列表，是分发到所有影院的id列表|是
 
 名称| 类型| 描述 |是否必须
 ----|-----|-----|-----
-movie_id|string|电影id|是
+movieId|string|电影id|是
 ADIdList|list|为影片添加的广告id列表|是
 
 ###response
